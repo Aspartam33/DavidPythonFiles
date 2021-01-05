@@ -1,0 +1,1 @@
+id_pedido,id_producto,fecha_de_alta,forma_de_pago,cantidad_producto,total_pag_inclu,total_pag_excl,desc_total_incl,desc_total_excl,total_price_tax_excl,total_price_tax_incl,total_envio_incl,total_envio_excl
