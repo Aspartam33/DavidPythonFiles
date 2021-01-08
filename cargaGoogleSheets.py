@@ -10,18 +10,11 @@ def auth_google():
     client = gspread.authorize(creds)
 
     sheet = client.open('data-prueba')
-    csv_to_sheets(sheet,client)
-def csv_to_sheets(sheet,client):
-    auth_google()
-    with open('data.csv','r') as file_obj:
+   
+    nom_file='data.csv'
+    with open(nom_file,'r') as file_obj:
         content = file_obj.read()
         res = client.import_csv(sheet.id, data=content)
-        return res
-
-def create_new_sheets(sheet,client):
-    auth_google()
-    sheet.add_worksheet(rows=1430,cols=2,title='Nombres1')
-    sheet_runs = sheet.get_worksheet(1)
-    
+        return res   
 auth_google()
 
