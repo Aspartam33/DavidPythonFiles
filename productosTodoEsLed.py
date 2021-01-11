@@ -4,7 +4,7 @@ def convierte_a_csv(sql,mydb):
     myresult = pd.read_sql_query(sql,mydb)
 
     df = pd.DataFrame(myresult)
-    res = df.to_csv(r'data1.csv',index=False)
+    res = df.to_csv(r'data-prueba.csv',index=False)
     return res
 def consulta_sql():
     mydb = mysql.connect(
@@ -19,3 +19,6 @@ def consulta_sql():
 
     convierte_a_csv(sql,mydb)
 consulta_sql()
+Button(text="Seleccionar archivo csv",bg="Pale green",command=abrir_archivo).place(x=10,y=10)
+#Button(text="Crear archivo csv",bg="Pale green",command=crear_archivo).place(x=10,y=40)
+ventana.mainloop()
