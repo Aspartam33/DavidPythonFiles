@@ -3,6 +3,9 @@ import pandas as pd
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import *
+from google_auth_oauthlib.flow import Flow, InstalledAppFlow
+from googleapiclient.discovery import build
+from google.auth.transport.requests import Request 
 from oauth2client.service_account import ServiceAccountCredentials
 import os
 ventana = tk.Tk()
@@ -13,6 +16,7 @@ def abrir_archivo():
      to_google_sheets(archivo_abierto)
      print (archivo_abierto)
 #formulario para crear una nueva hoja en un libro de google sheets
+
 def form_nueva_hoja():
     ventana2 = tk.Tk()
     Label1 = tk.Label(ventana2,text="Ingrese el nombre de la hoja")
@@ -20,9 +24,42 @@ def form_nueva_hoja():
     dato=tk.StringVar()
     entrada1 = tk.Entry(ventana2,width=10,textvariable=dato)
     entrada1.grid(column=0,row=2)
-    boton_crear=Button(ventana2, text="Crear")
+    boton_crear=Button(ventana2, text="Crear",command=(lambda:crear_hoja_sheets(entrada1)))
     boton_crear.grid(column=0,row=3)
     ventana2.mainloop()
+#crea una nueva hoja de trabajo
+def crear_hoja_sheets(dato):
+    scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
+
+    creds = ServiceAccountCredentials.from_json_keyfile_name('AutomarizacionTiendas-fca572e81aca.json',scope)
+
+    client = gspread.authorize(creds)
+    sheet_name=dato.get()
+    spreadsheet = client.open('data-prueba')
+    
+    try:
+         request_body = {
+            'requests': [{
+                'addSheet': {
+                    'properties': {
+                        'title': sheet_name,
+                        'tabColor': {
+                            'red': 0.44,
+                            'green': 0.99,
+                            'blue': 0.50
+                        }
+                    }
+                }
+            }]
+        }
+
+
+         response = spreadsheet.batch_update(request_body)
+         print("Listo")
+         return response
+        
+    except Exception as e:
+        print(e)
 #carga en un fichero csv en google sheets 
 def to_google_sheets(my_file):
     scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
@@ -37,7 +74,7 @@ def to_google_sheets(my_file):
         content = file_obj.read()
         res = client.import_csv(sheet.id, data=content)
         return res
-        from tkinter import messagebox
+        
 Button(text="Seleccionar archivo csv",bg="Pale green",command=abrir_archivo).place(x=10,y=10)
 Button(text="Crear hoja",bg="light blue",command=form_nueva_hoja).place(x=10,y=40)
 
